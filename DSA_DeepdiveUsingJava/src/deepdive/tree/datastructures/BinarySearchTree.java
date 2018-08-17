@@ -12,6 +12,7 @@ public final class BinarySearchTree<T> implements Tree<T> {
     private TreeNode<T> root;
     private int depth;
     private TreeNode node;
+    private boolean found = false;
 
     public BinarySearchTree() {
         root = new TreeNode<>(null);
@@ -55,7 +56,26 @@ public final class BinarySearchTree<T> implements Tree<T> {
 
     @Override
     public TreeNode<T> get(T data) {
-        return null;
+        return root.getData() == data ? root : get(data, root);
+    }
+
+    private TreeNode<T> get(T data, TreeNode<T> node) {
+        TreeNode<T> nodeF = null;
+        if (node.getLeftChild() != null)
+            if (node.getLeftChild().getData() == data) {
+                found = true;
+                return node.getLeftChild();
+            }
+        if (node.getRightChild() != null)
+            if (node.getRightChild().getData() == data) {
+                found = true;
+                return node.getRightChild();
+            }
+        if (!found && node.getLeftChild() != null)
+            nodeF = get(data, node.getLeftChild());
+        if (!found && node.getRightChild() != null)
+            nodeF = get(data, node.getRightChild());
+        return nodeF;
     }
 
     @Override
