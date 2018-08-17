@@ -54,18 +54,36 @@ public final class BinarySearchTree<T> implements Tree<T> {
     }
 
     @Override
-    public T get() {
+    public TreeNode<T> get(T data) {
         return null;
     }
 
     @Override
     public T min() {
-        return null;
+        return min(root);
+    }
+
+    private T min(TreeNode<T> node) {
+        T data = null;
+        if (node.getLeftChild() == null)
+            return node.getData();
+        else
+            data = min(node.getLeftChild());
+        return data;
     }
 
     @Override
     public T max() {
-        return null;
+        return max(root);
+    }
+
+    private T max(TreeNode<T> node) {
+        T data = null;
+        if (node.getRightChild() == null)
+            return node.getData();
+        else
+            data = max(node.getRightChild());
+        return data;
     }
 
     @Override
