@@ -1,6 +1,5 @@
 package deepdive.tree.application;
 
-import deepdive.tree.commons.Tree;
 import deepdive.tree.datastructures.BinarySearchTree;
 
 import java.util.Comparator;
@@ -24,5 +23,8 @@ public class BinarySearchTreeTest {
         bst.insert(32, c);
 
         System.out.println(bst.traverse("BFS"));
+
+        System.out.println(bst.min());
+        System.out.println(bst.max());
     }
 }
