@@ -1,5 +1,6 @@
 package deepdive.tree.application;
 
+import deepdive.tree.commons.TreeNode;
 import deepdive.tree.datastructures.BinarySearchTree;
 
 import java.util.Comparator;
@@ -26,5 +27,8 @@ public class BinarySearchTreeTest {
 
         System.out.println(bst.min());
         System.out.println(bst.max());
+
+        TreeNode<Integer> got = bst.get(2);
+        System.out.println(got != null ? ((TreeNode) got).getData() : "NULL");
     }
 }
