@@ -6,19 +6,30 @@ public class TreeNode<T> {
     private TreeNode<T> rightChild;
     private T data;
     private boolean isRoot;
-    private boolean isLeaf;
+    private int depth;
 
-    public TreeNode() {
+    private TreeNode() {
     }
 
     public TreeNode(T data) {
         this.data = data;
         isRoot = false;
-        isLeaf = false;
     }
 
     public TreeNode<T> getParent() {
         return parent;
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
+    public void setParent(TreeNode<T> parent) {
+        this.parent = parent;
     }
 
     public TreeNode<T> getLeftChild() {
@@ -50,14 +61,11 @@ public class TreeNode<T> {
     }
 
     public boolean isLeaf() {
-        return isLeaf;
+        return getLeftChild() == null && getRightChild() == null;
     }
 
     public void setRoot() {
         isRoot = true;
     }
 
-    public void setLeaf() {
-        isLeaf = true;
-    }
 }
