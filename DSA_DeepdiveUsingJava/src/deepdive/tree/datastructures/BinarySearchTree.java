@@ -11,43 +11,44 @@ public final class BinarySearchTree<T> implements Tree<T> {
 
     private TreeNode<T> root;
     private int depth;
-    private TreeNode node;
-    private boolean found = false;
+    private Comparator<T> c;
 
-    public BinarySearchTree() {
-        root = new TreeNode<>(null);
-        root.setRoot();
-    }
-
-    public BinarySearchTree(T data) {
+    public BinarySearchTree(T data, Comparator c) {
         root = new TreeNode<>(data);
         root.setRoot();
+        this.c = c;
     }
 
     //    @Override
-    public void insert(T data, Comparator c) throws IllegalAccessException {
-        insert(data, c, root);
+    public void insert(T data) throws IllegalAccessException {
+        insert(data, root);
     }
 
     @Override
-    public void insert(T data, Comparator c, TreeNode node) throws IllegalAccessException {
+    public void insert(T data, TreeNode<T> node) throws IllegalAccessException {
         if (node.getData() == null)
             throw new IllegalAccessException("Root has no data. Set root data first");
         if (c == null)
             throw new IllegalAccessException("Comparator needs to be specified");
         if (c.compare(node.getData(), data) > 0) {
-            if (node.getLeftChild() == null)
+            if (node.getLeftChild() == null) {
+                depth++;
                 node.setLeftChild(new TreeNode<>(data));
-            else {
+                node.getLeftChild().setParent(node);
+                node.getLeftChild().setDepth(depth);
+            } else {
                 node = node.getLeftChild();
-                insert(data, c, node);
+                insert(data, node);
             }
         } else if (c.compare(node.getData(), data) < 0) {
-            if (node.getRightChild() == null)
+            if (node.getRightChild() == null) {
+                depth++;
                 node.setRightChild(new TreeNode<>(data));
-            else {
+                node.getRightChild().setParent(node);
+                node.getRightChild().setDepth(depth);
+            } else {
                 node = node.getRightChild();
-                insert(data, c, node);
+                insert(data, node);
             }
         } else {
             throw new IllegalArgumentException("Element is a duplicate, discarding.");
@@ -55,18 +56,18 @@ public final class BinarySearchTree<T> implements Tree<T> {
     }
 
     @Override
-    public TreeNode<T> get(T data, Comparator c) {
-        return root.getData() == data ? root : get(data, root, c);
+    public TreeNode<T> get(T data) {
+        return root.getData() == data ? root : get(data, root);
     }
 
-    private TreeNode<T> get(T data, TreeNode<T> node, Comparator c) {
+    private TreeNode<T> get(T data, TreeNode<T> node) {
         TreeNode<T> nodeF = null;
         if (c.compare(node.getData(), data) == 0)
             return node;
         if (c.compare(node.getData(), data) > 0 && node.getLeftChild() != null)
-            nodeF = get(data, node.getLeftChild(), c);
+            nodeF = get(data, node.getLeftChild());
         if (c.compare(node.getData(), data) < 0 && node.getRightChild() != null)
-            nodeF = get(data, node.getRightChild(), c);
+            nodeF = get(data, node.getRightChild());
         return nodeF;
     }
 
@@ -76,7 +77,7 @@ public final class BinarySearchTree<T> implements Tree<T> {
     }
 
     private T min(TreeNode<T> node) {
-        T data = null;
+        T data;
         if (node.getLeftChild() == null)
             return node.getData();
         else
@@ -90,7 +91,7 @@ public final class BinarySearchTree<T> implements Tree<T> {
     }
 
     private T max(TreeNode<T> node) {
-        T data = null;
+        T data;
         if (node.getRightChild() == null)
             return node.getData();
         else
@@ -115,7 +116,24 @@ public final class BinarySearchTree<T> implements Tree<T> {
 
     @Override
     public T delete(T data) {
-        return null;
+        TreeNode<T> del = get(data);
+        if (del == null)
+            return null;
+        if (del.isLeaf()) {
+            if (del.getParent().getLeftChild() == del)
+                del.getParent().setLeftChild(null);
+            else
+                del.getParent().setRightChild(null);
+            return data;
+        }
+        if (del.getLeftChild() == null || del.getRightChild() == null) {
+            del.getParent().setData(del.getData());
+            del.getParent().setLeftChild(null);
+            del.getParent().setRightChild(null);
+            return data;
+        }
+
+        return data;
     }
 
     @Override
@@ -151,16 +169,8 @@ public final class BinarySearchTree<T> implements Tree<T> {
     private List<T> traverseLRN(TreeNode<T> node, List<T> data) {
         if (node.getLeftChild() != null)
             traverseLRN(node.getLeftChild(), data);
-        else {
-            data.add(node.getData());
-            return data;
-        }
         if (node.getRightChild() != null)
             traverseLRN(node.getRightChild(), data);
-        else {
-            data.add(node.getData());
-            return data;
-        }
         data.add(node.getData());
         return data;
     }
@@ -169,28 +179,17 @@ public final class BinarySearchTree<T> implements Tree<T> {
         data.add(node.getData());
         if (node.getLeftChild() != null)
             traverseNLR(node.getLeftChild(), data);
-        else
-            return data;
         if (node.getRightChild() != null)
             traverseNLR(node.getRightChild(), data);
-        else
-            return data;
         return data;
     }
 
     private List<T> traverseLNR(TreeNode<T> node, List<T> data) {
         if (node.getLeftChild() != null)
             traverseLNR(node.getLeftChild(), data);
-        else {
-            data.add(node.getData());
-            return data;
-        }
+        data.add(node.getData());
         if (node.getRightChild() != null) {
-            data.add(node.getData());
             traverseLNR(node.getRightChild(), data);
-        } else {
-            data.add(node.getData());
-            return data;
         }
         return data;
     }
