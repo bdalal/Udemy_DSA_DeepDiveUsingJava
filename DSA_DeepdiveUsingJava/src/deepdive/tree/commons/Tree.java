@@ -1,6 +1,5 @@
 package deepdive.tree.commons;
 
-import java.util.Comparator;
 import java.util.List;
 
 public interface Tree<T> {
@@ -9,11 +8,9 @@ public interface Tree<T> {
         LNR, LRN, NLR, BFS
     }
 
-    void insert(T data, Comparator c, TreeNode node) throws Exception;
+    void insert(T data, TreeNode<T> node) throws Exception;
 
-//    void insert(T data) throws Exception;
-
-    TreeNode<T> get(T data, Comparator c);
+    TreeNode<T> get(T data);
 
     T min();
 
