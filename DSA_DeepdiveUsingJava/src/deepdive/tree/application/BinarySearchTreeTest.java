@@ -28,7 +28,7 @@ public class BinarySearchTreeTest {
         System.out.println(bst.min());
         System.out.println(bst.max());
 
-        TreeNode<Integer> got = bst.get(2);
+        TreeNode<Integer> got = bst.get(29, c);
         System.out.println(got != null ? ((TreeNode) got).getData() : "NULL");
     }
 }

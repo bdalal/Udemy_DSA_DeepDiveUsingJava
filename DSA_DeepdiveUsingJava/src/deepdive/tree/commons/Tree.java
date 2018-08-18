@@ -13,7 +13,7 @@ public interface Tree<T> {
 
 //    void insert(T data) throws Exception;
 
-    TreeNode<T> get(T data);
+    TreeNode<T> get(T data, Comparator c);
 
     T min();
 

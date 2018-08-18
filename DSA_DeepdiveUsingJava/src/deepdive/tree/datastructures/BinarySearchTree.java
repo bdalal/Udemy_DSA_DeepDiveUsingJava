@@ -55,26 +55,18 @@ public final class BinarySearchTree<T> implements Tree<T> {
     }
 
     @Override
-    public TreeNode<T> get(T data) {
-        return root.getData() == data ? root : get(data, root);
+    public TreeNode<T> get(T data, Comparator c) {
+        return root.getData() == data ? root : get(data, root, c);
     }
 
-    private TreeNode<T> get(T data, TreeNode<T> node) {
+    private TreeNode<T> get(T data, TreeNode<T> node, Comparator c) {
         TreeNode<T> nodeF = null;
-        if (node.getLeftChild() != null)
-            if (node.getLeftChild().getData() == data) {
-                found = true;
-                return node.getLeftChild();
-            }
-        if (node.getRightChild() != null)
-            if (node.getRightChild().getData() == data) {
-                found = true;
-                return node.getRightChild();
-            }
-        if (!found && node.getLeftChild() != null)
-            nodeF = get(data, node.getLeftChild());
-        if (!found && node.getRightChild() != null)
-            nodeF = get(data, node.getRightChild());
+        if (c.compare(node.getData(), data) == 0)
+            return node;
+        if (c.compare(node.getData(), data) > 0 && node.getLeftChild() != null)
+            nodeF = get(data, node.getLeftChild(), c);
+        if (c.compare(node.getData(), data) < 0 && node.getRightChild() != null)
+            nodeF = get(data, node.getRightChild(), c);
         return nodeF;
     }
 
