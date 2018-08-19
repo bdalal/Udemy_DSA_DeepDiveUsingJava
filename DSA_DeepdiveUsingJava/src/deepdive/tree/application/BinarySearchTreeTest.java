@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class BinarySearchTreeTest {
     public static void main(String args[]) throws IllegalAccessException {
         Comparator<Integer> c = (o1, o2) -> o1 - o2;
-        BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>(25, c);
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>(25, c);
         bst.insert(20);
         bst.insert(15);
         bst.insert(27);
