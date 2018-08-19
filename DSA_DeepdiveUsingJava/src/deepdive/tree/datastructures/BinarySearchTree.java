@@ -19,37 +19,41 @@ public final class BinarySearchTree<T> implements Tree<T> {
         this.c = c;
     }
 
-    //    @Override
+    @Override
     public void insert(T data) throws IllegalAccessException {
-        insert(data, root);
+        insert(data, root, 0);
     }
 
-    @Override
-    public void insert(T data, TreeNode<T> node) throws IllegalAccessException {
+    public void insert(T data, TreeNode<T> node, int depth) throws IllegalAccessException {
         if (node.getData() == null)
             throw new IllegalAccessException("Root has no data. Set root data first");
         if (c == null)
             throw new IllegalAccessException("Comparator needs to be specified");
         if (c.compare(node.getData(), data) > 0) {
             if (node.getLeftChild() == null) {
-                depth++;
                 node.setLeftChild(new TreeNode<>(data));
                 node.getLeftChild().setParent(node);
-                node.getLeftChild().setDepth(depth);
+                node.getLeftChild().setDepth(++depth);
+                node.getLeftChild().setIsLeftChild();
+                node.setHasLeftChild(true);
+                node.incNumChildren();
             } else {
                 node = node.getLeftChild();
-                insert(data, node);
+                insert(data, node, ++depth);
             }
         } else if (c.compare(node.getData(), data) < 0) {
             if (node.getRightChild() == null) {
-                depth++;
                 node.setRightChild(new TreeNode<>(data));
                 node.getRightChild().setParent(node);
-                node.getRightChild().setDepth(depth);
+                node.getRightChild().setDepth(++depth);
+                node.getRightChild().setIsRightChild();
+                node.setHasRightChild(true);
+                node.incNumChildren();
             } else {
                 node = node.getRightChild();
-                insert(data, node);
+                insert(data, node, ++depth);
             }
+            this.depth = ++depth;
         } else {
             throw new IllegalArgumentException("Element is a duplicate, discarding.");
         }
@@ -101,17 +105,17 @@ public final class BinarySearchTree<T> implements Tree<T> {
 
     @Override
     public int depth(T data) {
-        return 0;
+        return get(data).getDepth();
     }
 
     @Override
     public int depth() {
-        return 0;
+        return depth;
     }
 
     @Override
     public int height(T data) {
-        return 0;
+        return depth - depth(data);
     }
 
     @Override
@@ -120,19 +124,40 @@ public final class BinarySearchTree<T> implements Tree<T> {
         if (del == null)
             return null;
         if (del.isLeaf()) {
-            if (del.getParent().getLeftChild() == del)
+            if (del.isLeftChild()) {
                 del.getParent().setLeftChild(null);
-            else
+                del.getParent().setHasLeftChild(false);
+            } else {
                 del.getParent().setRightChild(null);
+                del.getParent().setHasRightChild(false);
+            }
+            del.getParent().decNumChildren();
             return data;
         }
-        if (del.getLeftChild() == null || del.getRightChild() == null) {
-            del.getParent().setData(del.getData());
-            del.getParent().setLeftChild(null);
-            del.getParent().setRightChild(null);
+        if (del.getNumChildren() == 1) {
+            if (del.isLeftChild()) {
+                if (del.hasLeftChild()) {
+                    del.getLeftChild().setParent(del.getParent());
+                    del.getParent().setLeftChild(del.getLeftChild());
+                } else {
+                    del.getRightChild().setParent(del.getParent());
+                    del.getParent().setLeftChild(del.getRightChild());
+                }
+            } else {
+                if (del.hasLeftChild()) {
+                    del.getLeftChild().setParent(del.getParent());
+                    del.getParent().setRightChild(del.getLeftChild());
+                } else {
+                    del.getRightChild().setParent(del.getParent());
+                    del.getParent().setRightChild(del.getRightChild());
+                }
+            }
             return data;
         }
-
+        // Get biggest from left subtree
+        T dataDel = max(del.getLeftChild());
+        delete(dataDel);
+        del.setData(dataDel);
         return data;
     }
 
