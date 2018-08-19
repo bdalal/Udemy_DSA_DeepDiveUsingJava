@@ -7,6 +7,11 @@ public class TreeNode<T> {
     private T data;
     private boolean isRoot;
     private int depth;
+    private boolean isLeftChild;
+    private boolean isRightChild;
+    private boolean hasLeftChild;
+    private boolean hasRightChild;
+    private int numChildren;
 
     private TreeNode() {
     }
@@ -14,6 +19,50 @@ public class TreeNode<T> {
     public TreeNode(T data) {
         this.data = data;
         isRoot = false;
+    }
+
+    public void incNumChildren() {
+        numChildren++;
+    }
+
+    public void decNumChildren() {
+        numChildren--;
+    }
+
+    public int getNumChildren() {
+        return numChildren;
+    }
+
+    public void setHasRightChild(boolean hasRightChild) {
+        this.hasRightChild = hasRightChild;
+    }
+
+    public void setHasLeftChild(boolean hasLeftChild) {
+        this.hasLeftChild = hasLeftChild;
+    }
+
+    public boolean hasLeftChild() {
+        return hasLeftChild;
+    }
+
+    public boolean hasRightChild() {
+        return hasRightChild;
+    }
+
+    public void setIsLeftChild() {
+        isLeftChild = true;
+    }
+
+    public void setIsRightChild() {
+        isRightChild = true;
+    }
+
+    public boolean isLeftChild() {
+        return isLeftChild;
+    }
+
+    public boolean isRightChild() {
+        return isRightChild;
     }
 
     public TreeNode<T> getParent() {
@@ -61,7 +110,7 @@ public class TreeNode<T> {
     }
 
     public boolean isLeaf() {
-        return getLeftChild() == null && getRightChild() == null;
+        return !(hasLeftChild || hasRightChild);
     }
 
     public void setRoot() {
