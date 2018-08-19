@@ -1,5 +1,7 @@
 package deepdive.tree.datastructures;
 
+import deepdive.queue.Queue;
+import deepdive.queue.impl.QueueArrayImpl;
 import deepdive.tree.commons.Tree;
 import deepdive.tree.commons.TreeNode;
 
@@ -12,6 +14,7 @@ public final class BinarySearchTree<T> implements Tree<T> {
     private TreeNode<T> root;
     private int depth;
     private Comparator<T> c;
+    Queue<TreeNode<T>> queue;
 
     public BinarySearchTree(T data, Comparator c) {
         root = new TreeNode<>(data);
@@ -171,23 +174,25 @@ public final class BinarySearchTree<T> implements Tree<T> {
         } else if (t == TraverseMode.NLR.toString()) {
             return traverseNLR(root, data);
         } else if (t == TraverseMode.BFS.toString()) {
-            data.add(root.getData());
-            return traverseBFS(root, data);
+//            data.add(root.getData());
+            try {
+                queue = new QueueArrayImpl<>((int) Math.pow(2, depth) - 1);
+                return traverseBFS(root, data);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
         throw new IllegalArgumentException("This TraverseMode is not supported");
     }
 
-    private List<T> traverseBFS(TreeNode<T> node, List<T> data) {
+    private List<T> traverseBFS(TreeNode<T> node, List<T> data) throws Exception {
+        data.add(node.getData());
         if (node.getLeftChild() != null)
-            data.add(node.getLeftChild().getData());
-        else
-            return data;
+            queue.add(node.getLeftChild());
         if (node.getRightChild() != null)
-            data.add(node.getRightChild().getData());
-        else
-            return data;
-        traverseBFS(node.getLeftChild(), data);
-        traverseBFS(node.getRightChild(), data);
+            queue.add(node.getRightChild());
+        if (!queue.isEmpty())
+            traverseBFS(queue.remove(), data);
         return data;
     }
 
