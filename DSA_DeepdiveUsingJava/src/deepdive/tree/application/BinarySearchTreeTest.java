@@ -32,5 +32,19 @@ public class BinarySearchTreeTest {
         TreeNode<Integer> got = bst.get(33);
         System.out.println(got != null ? ((TreeNode) got).getData() : "NULL");
         System.out.println("Parent : " + got.getParent().getData());
+
+        System.out.println("Depth : " + bst.depth());
+        System.out.println("Depth of 25 : " + bst.depth(25));
+        System.out.println("Depth of 16 : " + bst.depth(16));
+//        System.out.println("Depth of 2 : " + bst.depth(2));
+        System.out.println("Height of 25 : " + bst.height(25));
+//        System.out.println("Depth of 2 : " + bst.height(2));
+        System.out.println("Height of 16 : " + bst.height(16));
+        System.out.println("Height of 20 : " + bst.height(20));
+
+        System.out.println(bst.delete(16));
+        System.out.println(bst.delete(17));
+        System.out.println(bst.delete(25));
+        System.out.println(bst.traverse("LNR"));
     }
 }
