@@ -14,9 +14,9 @@ public final class BinarySearchTree<T> implements Tree<T> {
     private TreeNode<T> root;
     private int depth;
     private Comparator<T> c;
-    Queue<TreeNode<T>> queue;
+    private Queue<TreeNode<T>> queue;
 
-    public BinarySearchTree(T data, Comparator c) {
+    public BinarySearchTree(T data, Comparator<T> c) {
         root = new TreeNode<>(data);
         root.setRoot();
         this.c = c;
@@ -27,7 +27,7 @@ public final class BinarySearchTree<T> implements Tree<T> {
         insert(data, root, 0);
     }
 
-    public void insert(T data, TreeNode<T> node, int depth) throws IllegalAccessException {
+    private void insert(T data, TreeNode<T> node, int depth) throws IllegalAccessException {
         if (node.getData() == null)
             throw new IllegalAccessException("Root has no data. Set root data first");
         if (c == null)
@@ -167,19 +167,19 @@ public final class BinarySearchTree<T> implements Tree<T> {
     @Override
     public List<T> traverse(String t) {
         List<T> data = new ArrayList<>();
-        if (t == TraverseMode.LNR.toString()) {
+        if (t.equals(TraverseMode.LNR.toString())) {
             return traverseLNR(root, data);
-        } else if (t == TraverseMode.LRN.toString()) {
+        } else if (t.equals(TraverseMode.LRN.toString())) {
             return traverseLRN(root, data);
-        } else if (t == TraverseMode.NLR.toString()) {
+        } else if (t.equals(TraverseMode.NLR.toString())) {
             return traverseNLR(root, data);
-        } else if (t == TraverseMode.BFS.toString()) {
+        } else if (t.equals(TraverseMode.BFS.toString())) {
 //            data.add(root.getData());
             try {
                 queue = new QueueArrayImpl<>((int) Math.pow(2, depth) - 1);
                 return traverseBFS(root, data);
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
         throw new IllegalArgumentException("This TraverseMode is not supported");
