@@ -8,7 +8,7 @@ public interface Tree<T> {
         LNR, LRN, NLR, BFS
     }
 
-    void insert(T data, TreeNode<T> node) throws Exception;
+    void insert(T data) throws Exception;
 
     TreeNode<T> get(T data);
 
