@@ -54,10 +54,22 @@ public class ArrayHeap<T> implements Heap<T> {
     @Override
     public T delete(T data) {
         boolean contains = Stream.of(heaparr).anyMatch(x -> c.compare(x, data) == 0);
+        T deletedElem = null;
         if (size == 0 || !contains)
             throw new RuntimeException(new IllegalAccessException("Heap is empty or does not have the data"));
+        if (size == 1) {
+            deletedElem = heaparr[0];
+            heaparr[--size] = null;
+            return deletedElem;
+        }
+        if (size == 2) {
+            deletedElem = heaparr[0];
+            heaparr[0] = (T) swap(heaparr[1], heaparr[1] = heaparr[0]);
+            heaparr[--size] = null;
+            return deletedElem;
+        }
         int pos = IntStream.range(0, size).filter(i -> c.compare(heaparr[i], data) == 0).findFirst().getAsInt();
-        T deletedElem = heaparr[pos];
+        deletedElem = heaparr[pos];
         heaparr[pos] = heaparr[size - 1];
         heaparr[--size] = null;
         if (!compare(heaparr[parentPos(pos)], heaparr[pos]))
